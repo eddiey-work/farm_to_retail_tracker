@@ -26,3 +26,4 @@ A Django web application to connect farmers directly with retailers in Pakistan,
 ## Status
 
 Day 1: Django project skeleton created.
+Day 2: SRS, ERD, and use case diagrams finalized.
