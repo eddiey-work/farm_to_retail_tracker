@@ -1,0 +1,38 @@
+/* Custom styles for Farm to Retail Tracker */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+}
+
+main {
+    padding-top: 1rem;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+.btn-success {
+    background-color: #2e7d32;
+    border-color: #2e7d32;
+}
+
+.btn-success:hover {
+    background-color: #1b5e20;
+    border-color: #1b5e20;
+}
+
+footer {
+    font-size: 0.9rem;
+}
