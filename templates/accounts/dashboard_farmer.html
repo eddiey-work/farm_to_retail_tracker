@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Farmer Dashboard{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-success mb-0">
+            <i class="bi bi-flower1"></i> Farmer Dashboard
+        </h2>
+        <span class="badge bg-success fs-6">{{ user.username }}</span>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card p-3">
+                <div class="text-muted small">My Crops</div>
+                <div class="fs-3 fw-bold text-success">0</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <div class="text-muted small">Incoming Orders</div>
+                <div class="fs-3 fw-bold text-success">0</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <div class="text-muted small">Revenue (PKR)</div>
+                <div class="fs-3 fw-bold text-success">0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4">
+        <h5>Quick actions</h5>
+        <p class="text-muted small">
+            Crop management and order tracking arrive in the next days.
+        </p>
+        <div>
+            <button class="btn btn-success" disabled>
+                <i class="bi bi-plus-circle"></i> Add Crop (coming soon)
+            </button>
+            <button class="btn btn-outline-success" disabled>
+                <i class="bi bi-list-check"></i> View Orders (coming soon)
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

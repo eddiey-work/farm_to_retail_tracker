@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Register — Farm to Retail Tracker{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card p-4">
+                <h3 class="text-success mb-3">Create your account</h3>
+                <p class="text-muted small">
+                    Register as a farmer to list crops, or as a retailer to buy in bulk.
+                </p>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label">
+                                {{ field.label }}
+                                {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="form-text small">{{ field.help_text|safe }}</div>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-person-plus"></i> Register
+                    </button>
+                </form>
+
+                <p class="text-center mt-3 mb-0 small">
+                    Already have an account?
+                    <a href="{% url 'login' %}" class="text-success">Log in here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
