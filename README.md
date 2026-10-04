@@ -29,3 +29,4 @@ Day 1: Django project skeleton created.
 Day 2: SRS, ERD, and use case diagrams finalized.
 Day 3: Settings configured, base template + navbar/footer, home page live.
 Day 4: UserProfile model created with role, phone, location; admin registered; auto-create signal wired.
+Day 5: Full auth flow (register/login/logout), role-based dashboards, role_required decorator added.
