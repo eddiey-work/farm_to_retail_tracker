@@ -31,3 +31,4 @@ Day 3: Settings configured, base template + navbar/footer, home page live.
 Day 4: UserProfile model created with role, phone, location; admin registered; auto-create signal wired.
 Day 5: Full auth flow (register/login/logout), role-based dashboards, role_required decorator added.
 Day 6: CropProduce model created with quantity, unit, price, harvest date, location, image; admin configured; sample seed command added.
+Day 7: Order model created with retailer, farmer, crop FKs, status choices, admin actions. Database schema complete.
