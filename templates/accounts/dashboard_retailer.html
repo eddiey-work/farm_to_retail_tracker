@@ -12,22 +12,16 @@
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card p-3">
                 <div class="text-muted small">My Orders</div>
-                <div class="fs-3 fw-bold text-success">0</div>
+                <div class="fs-3 fw-bold text-success">{{ order_count }}</div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card p-3">
                 <div class="text-muted small">Pending</div>
-                <div class="fs-3 fw-bold text-success">0</div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card p-3">
-                <div class="text-muted small">Total Spend (PKR)</div>
-                <div class="fs-3 fw-bold text-success">0</div>
+                <div class="fs-3 fw-bold text-warning">{{ pending_count }}</div>
             </div>
         </div>
     </div>
@@ -35,12 +29,12 @@
     <div class="card p-4">
         <h5>Quick actions</h5>
         <p class="text-muted small">
-            The marketplace arrives on Day 8. You'll be able to browse and order then.
+            Browse the marketplace to place a bulk order.
         </p>
         <div>
-            <button class="btn btn-success" disabled>
-                <i class="bi bi-shop"></i> Browse Marketplace (coming soon)
-            </button>
+            <a href="{% url 'marketplace' %}" class="btn btn-success">
+                <i class="bi bi-shop"></i> Browse Marketplace
+            </a>
         </div>
     </div>
 </div>

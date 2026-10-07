@@ -26,6 +26,7 @@ urlpatterns = [
     path('', marketplace_views.home, name='home'),
     path('accounts/', include('accounts.urls')),
     path('marketplace/', include('marketplace.urls')),
+    path('farmer/', include('marketplace.urls_farmer')),
 ]
 
 if settings.DEBUG:

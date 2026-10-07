@@ -15,19 +15,19 @@
         <div class="col-md-4">
             <div class="card p-3">
                 <div class="text-muted small">My Crops</div>
-                <div class="fs-3 fw-bold text-success">0</div>
+                <div class="fs-3 fw-bold text-success">{{ crop_count }}</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card p-3">
                 <div class="text-muted small">Incoming Orders</div>
-                <div class="fs-3 fw-bold text-success">0</div>
+                <div class="fs-3 fw-bold text-success">{{ order_count }}</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card p-3">
-                <div class="text-muted small">Revenue (PKR)</div>
-                <div class="fs-3 fw-bold text-success">0</div>
+                <div class="text-muted small">Out of Stock</div>
+                <div class="fs-3 fw-bold text-warning">{{ out_of_stock_count }}</div>
             </div>
         </div>
     </div>
@@ -35,15 +35,15 @@
     <div class="card p-4">
         <h5>Quick actions</h5>
         <p class="text-muted small">
-            Crop management and order tracking arrive in the next days.
+            Manage your crops or check incoming orders.
         </p>
         <div>
-            <button class="btn btn-success" disabled>
-                <i class="bi bi-plus-circle"></i> Add Crop (coming soon)
-            </button>
-            <button class="btn btn-outline-success" disabled>
-                <i class="bi bi-list-check"></i> View Orders (coming soon)
-            </button>
+            <a href="{% url 'my_crops' %}" class="btn btn-success">
+                <i class="bi bi-list-ul"></i> My Crops
+            </a>
+            <a href="{% url 'marketplace' %}" class="btn btn-outline-success">
+                <i class="bi bi-shop"></i> View Marketplace
+            </a>
         </div>
     </div>
 </div>

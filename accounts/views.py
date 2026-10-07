@@ -60,12 +60,34 @@ def logout_view(request):
 
 @login_required
 def dashboard_view(request):
-    """Send farmers and retailers to their own dashboard."""
+    """Send farmers and retailers to their own dashboard with stats."""
     profile = request.user.profile
+
     if profile.role == 'farmer':
-        return render(request, 'accounts/dashboard_farmer.html')
+        from marketplace.models import CropProduce
+        from orders.models import Order
+        from django.db.models import Q, Count
+
+        crops = CropProduce.objects.filter(farmer=request.user)
+        orders = Order.objects.filter(farmer=request.user)
+
+        context = {
+            'crop_count': crops.count(),
+            'out_of_stock_count': crops.filter(is_available=False).count(),
+            'order_count': orders.count(),
+        }
+        return render(request, 'accounts/dashboard_farmer.html', context)
+
     elif profile.role == 'retailer':
-        return render(request, 'accounts/dashboard_retailer.html')
+        from orders.models import Order
+
+        orders = Order.objects.filter(retailer=request.user)
+        context = {
+            'order_count': orders.count(),
+            'pending_count': orders.filter(status='pending').count(),
+        }
+        return render(request, 'accounts/dashboard_retailer.html', context)
+
     else:
         messages.error(request, "Unknown role. Contact support.")
         return redirect('home')

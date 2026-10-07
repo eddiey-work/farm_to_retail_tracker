@@ -7,6 +7,29 @@ from django.db.models import Q
 
 from .models import CropProduce
 
+from accounts.decorators import role_required
+from django.db.models import Count, Q
+
+
+@role_required('farmer')
+def my_crops(request):
+    """List the current farmer's own crops with summary stats."""
+    crops = (
+        CropProduce.objects
+        .filter(farmer=request.user)
+        .order_by('-created_at')
+    )
+
+    stats = crops.aggregate(
+        total=Count('id'),
+        available=Count('id', filter=Q(is_available=True)),
+        out_of_stock=Count('id', filter=Q(is_available=False)),
+    )
+
+    return render(request, 'marketplace/my_crops.html', {
+        'crops': crops,
+        'stats': stats,
+    })
 
 def home(request):
     """Landing page — shows a preview of the latest available crops."""
