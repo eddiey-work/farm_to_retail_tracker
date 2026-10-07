@@ -13,7 +13,7 @@
                 Connecting Pakistani farmers directly with urban retailers.
                 No middlemen. Fair prices. Fresh produce.
             </p>
-            <a href="#" class="btn btn-success btn-lg me-2">
+            <a href="{% url 'marketplace' %}" class="btn btn-success btn-lg me-2">
                 <i class="bi bi-shop"></i> Browse Marketplace
             </a>
             <a href="{% url 'register' %}" class="btn btn-outline-success btn-lg">
@@ -64,6 +64,29 @@
             </div>
         </div>
     </div>
-
+    {% if latest_crops %}
+    <h4 class="text-success mb-3 mt-4">Latest crops</h4>
+    <div class="row g-4 mb-4">
+        {% for crop in latest_crops %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="text-success mb-1">{{ crop.crop_name }}</h5>
+                        <p class="small text-muted mb-2">
+                            <i class="bi bi-geo-alt"></i> {{ crop.location }}
+                        </p>
+                        <p class="mb-2">
+                            <strong>Rs. {{ crop.price }}</strong>
+                            <span class="text-muted small">/ {{ crop.get_unit_display }}</span>
+                        </p>
+                        <a href="{% url 'crop_detail' crop.pk %}" class="btn btn-sm btn-outline-success">
+                            View
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 </div>
 {% endblock %}

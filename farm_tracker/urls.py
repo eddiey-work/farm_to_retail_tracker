@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', marketplace_views.home, name='home'),
     path('accounts/', include('accounts.urls')),
+    path('marketplace/', include('marketplace.urls')),
 ]
 
 if settings.DEBUG:

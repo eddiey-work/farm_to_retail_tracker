@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Marketplace — Farm to Retail Tracker{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <h2 class="text-success mb-0">
+            <i class="bi bi-shop"></i> Marketplace
+        </h2>
+        <span class="text-muted small">
+            {{ total_count }} crop{{ total_count|pluralize }} available
+        </span>
+    </div>
+
+    <!-- Filters -->
+    <div class="card p-3 mb-4">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small text-muted mb-1">Search</label>
+                <input type="text" name="q" value="{{ query }}"
+                       class="form-control" placeholder="Crop name or keyword">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Location</label>
+                <select name="location" class="form-select">
+                    <option value="">All locations</option>
+                    {% for loc in locations %}
+                        <option value="{{ loc }}" {% if loc == location %}selected{% endif %}>
+                            {{ loc }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Sort by</label>
+                <select name="sort" class="form-select">
+                    <option value="newest"    {% if sort == 'newest' %}selected{% endif %}>Newest first</option>
+                    <option value="oldest"    {% if sort == 'oldest' %}selected{% endif %}>Oldest first</option>
+                    <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price: low to high</option>
+                    <option value="price_high"{% if sort == 'price_high' %}selected{% endif %}>Price: high to low</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-funnel"></i> Apply
+                </button>
+            </div>
+        </form>
+
+        {% if query or location %}
+            <div class="mt-2 small">
+                <a href="{% url 'marketplace' %}" class="text-muted">
+                    <i class="bi bi-x-circle"></i> Clear filters
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Crop grid -->
+    {% if page_obj %}
+        <div class="row g-4">
+            {% for crop in page_obj %}
+                <div class="col-sm-6 col-md-4">
+                    <div class="card h-100">
+                        {% if crop.image %}
+                            <img src="{{ crop.image.url }}" class="card-img-top"
+                                 alt="{{ crop.crop_name }}"
+                                 style="height: 180px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light d-flex align-items-center justify-content-center"
+                                 style="height: 180px;">
+                                <i class="bi bi-flower2 text-success" style="font-size: 3rem;"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-success mb-1">{{ crop.crop_name }}</h5>
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-geo-alt"></i> {{ crop.location }}
+                            </p>
+                            <p class="mb-2">
+                                <strong>Rs. {{ crop.price }}</strong>
+                                <span class="text-muted small">/ {{ crop.get_unit_display }}</span>
+                            </p>
+                            <p class="small text-muted mb-3">
+                                Available: {{ crop.quantity }} {{ crop.get_unit_display }}
+                                &nbsp;·&nbsp;
+                                Harvest: {{ crop.harvest_date|date:"d M Y" }}
+                            </p>
+                            <div class="mt-auto">
+                                <a href="{% url 'crop_detail' crop.pk %}"
+                                   class="btn btn-outline-success btn-sm w-100">
+                                    View details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% querystring page=page_obj.previous_page_number %}">
+                                &laquo;
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if num == page_obj.number %}
+                            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% querystring page=num %}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% querystring page=page_obj.next_page_number %}">
+                                &raquo;
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+
+    {% else %}
+        <div class="card p-5 text-center">
+            <i class="bi bi-search text-muted" style="font-size: 3rem;"></i>
+            <h5 class="mt-3">No crops found</h5>
+            <p class="text-muted">
+                Try a different keyword or clear the filters.
+            </p>
+            <div>
+                <a href="{% url 'marketplace' %}" class="btn btn-success">See all crops</a>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
