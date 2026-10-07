@@ -33,3 +33,4 @@ Day 5: Full auth flow (register/login/logout), role-based dashboards, role_requi
 Day 6: CropProduce model created with quantity, unit, price, harvest date, location, image; admin configured; sample seed command added.
 Day 7: Order model created with retailer, farmer, crop FKs, status choices, admin actions. Database schema complete.
 Day 8: Marketplace list view (search, filter, sort, pagination), crop detail page, navbar wired.
+Day 9: Farmer my_crops view (read-only) with stats, dashboard stats wired, farmer URL namespace added.
