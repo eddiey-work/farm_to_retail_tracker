@@ -15,6 +15,45 @@ from django.shortcuts import redirect
 from .forms import CropForm
 
 @role_required('farmer')
+def crop_delete(request, pk):
+    """Confirm and delete a crop. Only the owning farmer can delete."""
+    crop = get_object_or_404(CropProduce, pk=pk, farmer=request.user)
+
+    if request.method == 'POST':
+        name = crop.crop_name
+        crop.delete()
+        messages.success(request, f"'{name}' has been deleted.")
+        return redirect('my_crops')
+
+    return render(request, 'marketplace/crop_confirm_delete.html', {'crop': crop})
+
+
+
+@role_required('farmer')
+def crop_update(request, pk):
+    """Edit a crop listing. Only the owning farmer can edit."""
+    crop = get_object_or_404(CropProduce, pk=pk, farmer=request.user)
+
+    if request.method == 'POST':
+        form = CropForm(request.POST, request.FILES, instance=crop)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"'{crop.crop_name}' has been updated.")
+            return redirect('my_crops')
+        else:
+            messages.error(request, "Please fix the errors below.")
+    else:
+        form = CropForm(instance=crop)
+
+    return render(request, 'marketplace/crop_form.html', {
+        'form': form,
+        'page_title': f'Edit {crop.crop_name}',
+        'submit_label': 'Save changes',
+        'crop': crop,
+    })
+
+
+@role_required('farmer')
 def crop_create(request):
     """Create a new crop listing for the logged-in farmer."""
     if request.method == 'POST':

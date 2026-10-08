@@ -26,7 +26,7 @@ class Order(models.Model):
     )
     crop = models.ForeignKey(
         CropProduce,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='orders'
     )
     ordered_qty = models.DecimalField(max_digits=10, decimal_places=2)

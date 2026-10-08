@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete {{ crop.crop_name }} — Farm to Retail Tracker{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'my_crops' %}" class="text-success">My Crops</a>
+            </li>
+            <li class="breadcrumb-item active">Delete</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card p-4">
+                <div class="text-center mb-3">
+                    <i class="bi bi-exclamation-triangle text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <h3 class="text-danger text-center mb-3">Delete this crop?</h3>
+
+                <div class="alert alert-warning small">
+                    This action cannot be undone. Any orders linked to this crop will also be deleted.
+                </div>
+
+                <dl class="row mb-4">
+                    <dt class="col-sm-4">Crop</dt>
+                    <dd class="col-sm-8"><strong>{{ crop.crop_name }}</strong></dd>
+
+                    <dt class="col-sm-4">Quantity</dt>
+                    <dd class="col-sm-8">
+                        {{ crop.quantity }} {{ crop.get_unit_display }}
+                    </dd>
+
+                    <dt class="col-sm-4">Price</dt>
+                    <dd class="col-sm-8">
+                        Rs. {{ crop.price }} / {{ crop.get_unit_display }}
+                    </dd>
+
+                    <dt class="col-sm-4">Location</dt>
+                    <dd class="col-sm-8">{{ crop.location }}</dd>
+
+                    <dt class="col-sm-4">Harvest date</dt>
+                    <dd class="col-sm-8">{{ crop.harvest_date|date:"d M Y" }}</dd>
+                </dl>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'my_crops' %}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Yes, delete permanently
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
