@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Place Order — {{ crop.crop_name }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'marketplace' %}" class="text-success">Marketplace</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'crop_detail' crop.pk %}" class="text-success">{{ crop.crop_name }}</a>
+            </li>
+            <li class="breadcrumb-item active">Place order</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+
+        <!-- Left: crop summary -->
+        <div class="col-md-5">
+            <div class="card p-4">
+                <h5 class="text-success">Order summary</h5>
+
+                <dl class="row mb-0 mt-3">
+                    <dt class="col-5">Crop</dt>
+                    <dd class="col-7"><strong>{{ crop.crop_name }}</strong></dd>
+
+                    <dt class="col-5">Farmer</dt>
+                    <dd class="col-7">{{ crop.farmer.username }}</dd>
+
+                    <dt class="col-5">Location</dt>
+                    <dd class="col-7">{{ crop.location }}</dd>
+
+                    <dt class="col-5">Price</dt>
+                    <dd class="col-7">
+                        Rs. {{ crop.price }}
+                        <span class="text-muted small">/ {{ crop.get_unit_display }}</span>
+                    </dd>
+
+                    <dt class="col-5">Available</dt>
+                    <dd class="col-7">
+                        {{ crop.quantity }} {{ crop.get_unit_display }}
+                    </dd>
+
+                    <dt class="col-5">Harvest</dt>
+                    <dd class="col-7">{{ crop.harvest_date|date:"d M Y" }}</dd>
+                </dl>
+            </div>
+
+            <div class="card p-3 mt-3">
+                <div class="small text-muted mb-2">
+                    <i class="bi bi-info-circle"></i> How ordering works
+                </div>
+                <ol class="small text-muted ps-3 mb-0">
+                    <li>Place your order.</li>
+                    <li>The farmer confirms it.</li>
+                    <li>You coordinate delivery directly.</li>
+                    <li>No payment is processed through this platform.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Right: order form -->
+        <div class="col-md-7">
+            <div class="card p-4">
+                <h5 class="text-success mb-3">Your order</h5>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.ordered_qty.id_for_label }}" class="form-label">
+                            {{ form.ordered_qty.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.ordered_qty }}
+                        {% if form.ordered_qty.help_text %}
+                            <div class="form-text small">{{ form.ordered_qty.help_text }}</div>
+                        {% endif %}
+                        {% for error in form.ordered_qty.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.notes.id_for_label }}" class="form-label">
+                            {{ form.notes.label }}
+                        </label>
+                        {{ form.notes }}
+                        {% for error in form.notes.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="alert alert-light border small">
+                        Total cost will be calculated when you place the order.
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'crop_detail' crop.pk %}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-cart-check"></i> Place order
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

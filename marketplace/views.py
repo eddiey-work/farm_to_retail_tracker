@@ -14,6 +14,111 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import CropForm
 
+from decimal import Decimal
+from django.db import transaction
+from orders.models import Order
+from .forms import CropForm, OrderForm
+
+from django.core.exceptions import ValidationError
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def order_confirmation(request, pk):
+    """Show the details of a freshly placed order. Owner-only."""
+    order = get_object_or_404(
+        Order.objects.select_related('crop', 'farmer', 'retailer'),
+        pk=pk,
+        retailer=request.user,
+    )
+    return render(request, 'marketplace/order_confirmation.html', {'order': order})
+
+
+@role_required('retailer')
+def place_order(request, pk):
+    """Place an order for a crop. Only retailers can order."""
+    crop = get_object_or_404(
+        CropProduce.objects.select_related('farmer'),
+        pk=pk
+    )
+
+    # Guard: farmer can't order their own crop (paranoia — role_required already prevents this)
+    if crop.farmer == request.user:
+        messages.error(request, "You cannot order your own crop.")
+        return redirect('crop_detail', pk=crop.pk)
+
+    if not crop.is_available:
+        messages.error(request, "This crop is no longer available.")
+        return redirect('crop_detail', pk=crop.pk)
+
+    if request.method == 'POST':
+        form = OrderForm(request.POST, crop=crop)
+        if form.is_valid():
+            qty = form.cleaned_data['ordered_qty']
+            notes = form.cleaned_data['notes']
+
+            try:
+                with transaction.atomic():
+                    # Lock the crop row until this transaction commits
+                    locked_crop = (
+                        CropProduce.objects
+                        .select_for_update()
+                        .get(pk=crop.pk)
+                    )
+
+                    # Re-check inside the lock
+                    if locked_crop.quantity < qty:
+                        raise ValidationError(
+                            f"Only {locked_crop.quantity} {locked_crop.get_unit_display()} "
+                            f"remaining. Someone may have just ordered."
+                        )
+                    if not locked_crop.is_available:
+                        raise ValidationError(
+                            "This crop is no longer available."
+                        )
+
+                    # Compute total using the current price
+                    total = (locked_crop.price * qty).quantize(Decimal('0.01'))
+
+                    # Deduct stock
+                    locked_crop.quantity -= qty
+                    if locked_crop.quantity <= 0:
+                        locked_crop.quantity = Decimal('0')
+                        locked_crop.is_available = False
+                    locked_crop.save()
+
+                    # Create the order
+                    order = Order.objects.create(
+                        retailer=request.user,
+                        farmer=locked_crop.farmer,
+                        crop=locked_crop,
+                        ordered_qty=qty,
+                        total_price=total,
+                        notes=notes,
+                        status='pending',
+                    )
+
+                messages.success(
+                    request,
+                    f"Order #{order.pk} placed successfully. "
+                    f"Waiting for the farmer to confirm."
+                )
+                return redirect('order_confirmation', pk=order.pk)
+
+            except ValidationError as e:
+                # Raised inside the transaction — the transaction is rolled back automatically
+                form.add_error('ordered_qty', e)
+
+        else:
+            messages.error(request, "Please fix the errors below.")
+    else:
+        form = OrderForm(crop=crop)
+
+    return render(request, 'marketplace/place_order.html', {
+        'crop': crop,
+        'form': form,
+    })
+
 @role_required('farmer')
 def crop_delete(request, pk):
     """Confirm and delete a crop. Only the owning farmer can delete."""

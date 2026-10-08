@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmed — #{{ order.pk }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="text-center mb-4">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                <h2 class="text-success mt-2">Order placed!</h2>
+                <p class="text-muted">
+                    Order <strong>#{{ order.pk }}</strong> has been sent to the farmer.
+                </p>
+            </div>
+
+            <div class="card p-4">
+                <h5 class="text-success mb-3">Order details</h5>
+
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Order number</dt>
+                    <dd class="col-sm-8"><strong>#{{ order.pk }}</strong></dd>
+
+                    <dt class="col-sm-4">Crop</dt>
+                    <dd class="col-sm-8">{{ order.crop.crop_name }}</dd>
+
+                    <dt class="col-sm-4">Farmer</dt>
+                    <dd class="col-sm-8">
+                        {{ order.farmer.username }}
+                        <span class="text-muted small">— {{ order.farmer.profile.location }}</span>
+                    </dd>
+
+                    <dt class="col-sm-4">Quantity ordered</dt>
+                    <dd class="col-sm-8">
+                        {{ order.ordered_qty }} {{ order.crop.get_unit_display }}
+                    </dd>
+
+                    <dt class="col-sm-4">Total price</dt>
+                    <dd class="col-sm-8">
+                        <strong class="text-success">Rs. {{ order.total_price }}</strong>
+                    </dd>
+
+                    <dt class="col-sm-4">Status</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge bg-warning text-dark">
+                            {{ order.get_status_display }}
+                        </span>
+                    </dd>
+
+                    <dt class="col-sm-4">Placed on</dt>
+                    <dd class="col-sm-8">{{ order.created_at|date:"d M Y, H:i" }}</dd>
+
+                    {% if order.notes %}
+                        <dt class="col-sm-4">Your notes</dt>
+                        <dd class="col-sm-8">{{ order.notes }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+
+            <div class="card p-3 mt-3">
+                <div class="small text-muted">
+                    <i class="bi bi-info-circle"></i>
+                    The farmer will see this order in their dashboard. You can track
+                    its status from <a href="{% url 'marketplace' %}" class="text-success">the marketplace</a>.
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'marketplace' %}" class="btn btn-outline-success">
+                    <i class="bi bi-shop"></i> Continue browsing
+                </a>
+                <a href="{% url 'dashboard' %}" class="btn btn-success">
+                    <i class="bi bi-speedometer2"></i> Go to dashboard
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
