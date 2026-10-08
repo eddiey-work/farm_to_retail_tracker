@@ -34,3 +34,4 @@ Day 6: CropProduce model created with quantity, unit, price, harvest date, locat
 Day 7: Order model created with retailer, farmer, crop FKs, status choices, admin actions. Database schema complete.
 Day 8: Marketplace list view (search, filter, sort, pagination), crop detail page, navbar wired.
 Day 9: Farmer my_crops view (read-only) with stats, dashboard stats wired, farmer URL namespace added.
+Day 10: CropForm (ModelForm), crop_create view, image upload working, Add Crop button enabled.
