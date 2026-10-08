@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} — Farm to Retail Tracker{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'my_crops' %}" class="text-success">My Crops</a>
+            </li>
+            <li class="breadcrumb-item active">{{ page_title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card p-4">
+                <h3 class="text-success mb-1">{{ page_title }}</h3>
+                <p class="text-muted small mb-4">
+                    Fields marked <span class="text-danger">*</span> are required.
+                </p>
+
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label for="{{ form.crop_name.id_for_label }}" class="form-label">
+                                {{ form.crop_name.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.crop_name }}
+                            {% for error in form.crop_name.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="{{ form.unit.id_for_label }}" class="form-label">
+                                {{ form.unit.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.unit }}
+                            {% for error in form.unit.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.quantity.id_for_label }}" class="form-label">
+                                {{ form.quantity.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.quantity }}
+                            {% if form.quantity.help_text %}
+                                <div class="form-text small">{{ form.quantity.help_text }}</div>
+                            {% endif %}
+                            {% for error in form.quantity.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.price.id_for_label }}" class="form-label">
+                                {{ form.price.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.price }}
+                            {% if form.price.help_text %}
+                                <div class="form-text small">{{ form.price.help_text }}</div>
+                            {% endif %}
+                            {% for error in form.price.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.harvest_date.id_for_label }}" class="form-label">
+                                {{ form.harvest_date.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.harvest_date }}
+                            {% for error in form.harvest_date.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.location.id_for_label }}" class="form-label">
+                                {{ form.location.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.location }}
+                            {% for error in form.location.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">
+                                {{ form.description.label }}
+                            </label>
+                            {{ form.description }}
+                            {% for error in form.description.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-8">
+                            <label for="{{ form.image.id_for_label }}" class="form-label">
+                                {{ form.image.label }}
+                            </label>
+                            {{ form.image }}
+                            <div class="form-text small">
+                                JPG or PNG. Will appear on the marketplace card.
+                            </div>
+                            {% for error in form.image.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-4 d-flex align-items-center">
+                            <div class="form-check mt-4">
+                                {{ form.is_available }}
+                                <label class="form-check-label" for="{{ form.is_available.id_for_label }}">
+                                    {{ form.is_available.label }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'my_crops' %}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> {{ submit_label }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

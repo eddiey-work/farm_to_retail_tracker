@@ -10,6 +10,35 @@ from .models import CropProduce
 from accounts.decorators import role_required
 from django.db.models import Count, Q
 
+from django.contrib import messages
+from django.shortcuts import redirect
+from .forms import CropForm
+
+@role_required('farmer')
+def crop_create(request):
+    """Create a new crop listing for the logged-in farmer."""
+    if request.method == 'POST':
+        form = CropForm(request.POST, request.FILES)
+        if form.is_valid():
+            crop = form.save(commit=False)
+            crop.farmer = request.user
+            crop.save()
+            messages.success(
+                request,
+                f"'{crop.crop_name}' has been listed on the marketplace."
+            )
+            return redirect('my_crops')
+        else:
+            messages.error(request, "Please fix the errors below.")
+    else:
+        form = CropForm()
+
+    return render(request, 'marketplace/crop_form.html', {
+        'form': form,
+        'page_title': 'Add a new crop',
+        'submit_label': 'List crop',
+    })
+
 
 @role_required('farmer')
 def my_crops(request):

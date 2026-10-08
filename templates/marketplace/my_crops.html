@@ -16,9 +16,9 @@
             </p>
         </div>
         <div>
-            <button class="btn btn-success" disabled title="Coming Day 10">
+            <a href="{% url 'crop_create' %}" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> Add Crop
-            </button>
+            </a>
         </div>
     </div>
 
@@ -118,9 +118,9 @@
                 Once you add crops, they appear here and on the public marketplace.
             </p>
             <div>
-                <button class="btn btn-success" disabled title="Coming Day 10">
+                <a href="{% url 'crop_create' %}" class="btn btn-success">
                     <i class="bi bi-plus-circle"></i> Add your first crop
-                </button>
+                </a>
             </div>
         </div>
     {% endif %}
