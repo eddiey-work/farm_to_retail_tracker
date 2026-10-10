@@ -85,6 +85,7 @@ def dashboard_view(request):
         context = {
             'order_count': orders.count(),
             'pending_count': orders.filter(status='pending').count(),
+            'confirmed_count': orders.filter(status='confirmed').count(),
         }
         return render(request, 'accounts/dashboard_retailer.html', context)
 

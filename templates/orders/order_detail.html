@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}Order #{{ order.pk }} — Farm to Retail Tracker{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% if is_retailer %}
+                <li class="breadcrumb-item"><a href="{% url 'my_orders' %}" class="text-success">My Orders</a></li>
+            {% else %}
+                <li class="breadcrumb-item"><a href="{% url 'incoming_orders' %}" class="text-success">Incoming Orders</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active">#{{ order.pk }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-success mb-0">Order #{{ order.pk }}</h2>
+        <span class="badge fs-6
+            {% if order.status == 'pending' %}bg-warning text-dark
+            {% elif order.status == 'confirmed' %}bg-info text-dark
+            {% elif order.status == 'completed' %}bg-success
+            {% else %}bg-secondary{% endif %}">
+            {{ order.get_status_display }}
+        </span>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-7">
+            <div class="card p-4">
+                <h5 class="text-success mb-3">Order summary</h5>
+
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">Crop</dt>
+                    <dd class="col-sm-7">
+                        <a href="{% url 'crop_detail' order.crop.pk %}" class="text-success">
+                            {{ order.crop.crop_name }}
+                        </a>
+                    </dd>
+
+                    <dt class="col-sm-5">Quantity</dt>
+                    <dd class="col-sm-7">
+                        {{ order.ordered_qty }} {{ order.crop.get_unit_display }}
+                    </dd>
+
+                    <dt class="col-sm-5">Unit price</dt>
+                    <dd class="col-sm-7">
+                        Rs. {{ order.crop.price }} / {{ order.crop.get_unit_display }}
+                    </dd>
+
+                    <dt class="col-sm-5">Total</dt>
+                    <dd class="col-sm-7">
+                        <strong class="text-success fs-5">Rs. {{ order.total_price }}</strong>
+                    </dd>
+
+                    <dt class="col-sm-5">Placed on</dt>
+                    <dd class="col-sm-7">{{ order.created_at|date:"d M Y, H:i" }}</dd>
+
+                    {% if order.notes %}
+                        <dt class="col-sm-5">Notes</dt>
+                        <dd class="col-sm-7">{{ order.notes }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+
+            {% if order.status == 'cancelled' %}
+                <div class="alert alert-secondary mt-3 small">
+                    <i class="bi bi-x-circle"></i>
+                    This order was cancelled. The quantity has been restored to the farmer's inventory.
+                </div>
+            {% elif order.status == 'completed' %}
+                <div class="alert alert-success mt-3 small">
+                    <i class="bi bi-check-circle"></i>
+                    This order is complete. Contact the farmer directly to arrange delivery.
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-5">
+            <div class="card p-4">
+                <h5 class="text-success mb-3">Parties</h5>
+
+                <p class="mb-1 small text-muted">Farmer</p>
+                <p class="mb-3">
+                    <strong>{{ order.farmer.username }}</strong><br>
+                    {% if order.farmer.profile.location %}
+                        <span class="small text-muted">
+                            <i class="bi bi-geo-alt"></i> {{ order.farmer.profile.location }}
+                        </span><br>
+                    {% endif %}
+                    {% if order.farmer.profile.phone %}
+                        <span class="small text-muted">
+                            <i class="bi bi-telephone"></i> {{ order.farmer.profile.phone }}
+                        </span>
+                    {% endif %}
+                </p>
+
+                <p class="mb-1 small text-muted">Retailer</p>
+                <p class="mb-0">
+                    <strong>{{ order.retailer.username }}</strong><br>
+                    {% if order.retailer.profile.location %}
+                        <span class="small text-muted">
+                            <i class="bi bi-geo-alt"></i> {{ order.retailer.profile.location }}
+                        </span><br>
+                    {% endif %}
+                    {% if order.retailer.profile.phone %}
+                        <span class="small text-muted">
+                            <i class="bi bi-telephone"></i> {{ order.retailer.profile.phone }}
+                        </span>
+                    {% endif %}
+                </p>
+            </div>
+
+            {% if is_farmer %}
+                <div class="card p-4 mt-3">
+                    <h5 class="text-success mb-3">Actions</h5>
+
+                    {% if order.status == 'pending' %}
+                        <form method="post" action="{% url 'order_confirm' order.pk %}" class="mb-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="bi bi-check2-circle"></i> Confirm order
+                            </button>
+                        </form>
+                        <form method="post" action="{% url 'order_cancel' order.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger w-100"
+                                    onclick="return confirm('Cancel order #{{ order.pk }}? Stock will be restored to your inventory.');">
+                                <i class="bi bi-x-circle"></i> Cancel order
+                            </button>
+                        </form>
+
+                    {% elif order.status == 'confirmed' %}
+                        <form method="post" action="{% url 'order_complete' order.pk %}" class="mb-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="bi bi-flag"></i> Mark as completed
+                            </button>
+                        </form>
+                        <form method="post" action="{% url 'order_cancel' order.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger w-100"
+                                    onclick="return confirm('Cancel order #{{ order.pk }}? Stock will be restored to your inventory.');">
+                                <i class="bi bi-x-circle"></i> Cancel order
+                            </button>
+                        </form>
+
+                    {% elif order.status == 'completed' %}
+                        <p class="text-muted small mb-0">
+                            <i class="bi bi-check-circle text-success"></i>
+                            This order is complete. No further actions available.
+                        </p>
+
+                    {% else %}
+                        <p class="text-muted small mb-0">
+                            <i class="bi bi-x-circle text-secondary"></i>
+                            This order was cancelled. No further actions available.
+                        </p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if is_retailer %}
+                <div class="card p-3 mt-3">
+                    <div class="small text-muted">
+                        <i class="bi bi-info-circle"></i>
+                        Only the farmer can update the order status. You'll be notified
+                        when they confirm or complete it.
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
