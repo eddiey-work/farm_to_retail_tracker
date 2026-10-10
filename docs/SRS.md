@@ -80,6 +80,9 @@ external payment gateway, SMS service, or government database in version 1.
 - FR-2.3: A farmer can delete their own listings.
 - FR-2.4: A farmer can view all their own listings in a dashboard.
 - FR-2.5: A farmer cannot edit or delete other farmers’ listings.
+- FR-2.6: Farmers may only create, edit, or delete their own crop listings.
+  Attempting to access another farmer's crop returns a 404 response to
+  avoid leaking whether the resource exists.
 
 ### 3.3 Marketplace (FR-3)
 - FR-3.1: Any visitor can view the public marketplace of available crops.
@@ -97,6 +100,9 @@ external payment gateway, SMS service, or government database in version 1.
 - FR-4.6: A farmer can view incoming orders on their crops.
 - FR-4.7: A farmer can update order status (Confirm / Complete / Cancel).
 - FR-4.8: Cancelling an order restores crop quantity.
+- FR-4.9: Order placement and cancellation use database-level row locking
+  (`select_for_update`) inside a transaction to prevent overselling and
+  ensure stock is restored correctly on cancellation.
 
 ### 3.5 Admin Panel (FR-5)
 - FR-5.1: Admin can manage users, crops, and orders via Django admin.
