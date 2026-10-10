@@ -1,40 +1,38 @@
-# Farm to Retail Tracker
+## Features Implemented
 
-A Django web application to connect farmers directly with retailers in Pakistan, reducing middlemen.
+### Public
+- Browse marketplace with search, location filter, sort, pagination
+- View crop detail with farmer contact info
 
-## Tech Stack
-- Django
-- SQLite for development
-- Bootstrap 5
-- HTML/CSS
+### Authentication
+- Register as Farmer or Retailer
+- Login / logout
+- Role-based dashboards
 
-## Setup
+### Farmer
+- List, edit, delete own crops with optional images
+- See incoming orders with status filters
+- Confirm / Complete / Cancel orders
+- Cancel restores stock atomically
 
-1. Clone the repository
-2. Create virtual environment:
-   `python -m venv venv`
-3. Activate virtual environment:
-   - Windows: `venv\Scripts\activate`
-   - Mac/Linux: `source venv/bin/activate`
-4. Install dependencies:
-   `pip install -r requirements.txt`
-5. Run migrations:
-   `python manage.py migrate`
-6. Start server:
-   `python manage.py runserver`
+### Retailer
+- Search and browse marketplace
+- Place orders with live stock validation
+- Track order status (Pending / Confirmed / Completed / Cancelled)
 
-## Status
+### System
+- Role-based access control (farmer / retailer)
+- Owner-scoped queries (404 on foreign resources)
+- Atomic order placement and cancellation
+- Responsive Bootstrap 5 UI
 
-Day 1: Django project skeleton created.
-Day 2: SRS, ERD, and use case diagrams finalized.
-Day 3: Settings configured, base template + navbar/footer, home page live.
-Day 4: UserProfile model created with role, phone, location; admin registered; auto-create signal wired.
-Day 5: Full auth flow (register/login/logout), role-based dashboards, role_required decorator added.
-Day 6: CropProduce model created with quantity, unit, price, harvest date, location, image; admin configured; sample seed command added.
-Day 7: Order model created with retailer, farmer, crop FKs, status choices, admin actions. Database schema complete.
-Day 8: Marketplace list view (search, filter, sort, pagination), crop detail page, navbar wired.
-Day 9: Farmer my_crops view (read-only) with stats, dashboard stats wired, farmer URL namespace added.
-Day 10: CropForm (ModelForm), crop_create view, image upload working, Add Crop button enabled.
-Day 11: crop_update and crop_delete views with ownership checks; CRUD cycle complete for farmers.
-Day 12: place_order view with transaction.atomic and select_for_update; stock deduction; order confirmation page; Order now button live.
-Day 13: Order management complete. Retailer sees placed orders; farmer sees incoming orders; status transitions (confirm/complete/cancel) with atomic stock restoration on cancel.
+## In Progress / Planned
+- Automated tests (Week 6)
+- Deployment to PythonAnywhere (Week 7)
+- Final report and presentation (Week 7)
+
+## Known Limitations (v1)
+- No payments processed through the platform
+- SQLite in development — `select_for_update` is a no-op; PostgreSQL required for full concurrency guarantee
+- No email or SMS notifications
+- Order lists are not paginated
