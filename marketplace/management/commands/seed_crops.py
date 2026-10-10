@@ -9,24 +9,24 @@ class Command(BaseCommand):
     help = "Seed sample CropProduce records for testing"
 
     def handle(self, *args, **kwargs):
-        farmers = User.objects.filter(profile__role='farmer')
+        farmers = User.objects.filter(profile__role="farmer")
         if not farmers.exists():
-            self.stdout.write(self.style.ERROR(
-                "No farmers found. Create a farmer user first."
-            ))
+            self.stdout.write(
+                self.style.ERROR("No farmers found. Create a farmer user first.")
+            )
             return
 
         crops = [
-            ('Wheat', 500, 'kg', 85, 'Lahore'),
-            ('Rice (Basmati)', 200, 'kg', 250, 'Faisalabad'),
-            ('Sugarcane', 40, 'maund', 1800, 'Multan'),
-            ('Cotton', 25, 'maund', 8500, 'Bahawalpur'),
-            ('Maize', 800, 'kg', 55, 'Sahiwal'),
-            ('Potato', 1500, 'kg', 45, 'Okara'),
-            ('Onion', 900, 'kg', 60, 'Karachi'),
-            ('Tomato', 300, 'kg', 90, 'Peshawar'),
-            ('Mango (Sindhri)', 400, 'kg', 320, 'Multan'),
-            ('Chili (Red)', 150, 'kg', 280, 'Hyderabad'),
+            ("Wheat", 500, "kg", 85, "Lahore"),
+            ("Rice (Basmati)", 200, "kg", 250, "Faisalabad"),
+            ("Sugarcane", 40, "maund", 1800, "Multan"),
+            ("Cotton", 25, "maund", 8500, "Bahawalpur"),
+            ("Maize", 800, "kg", 55, "Sahiwal"),
+            ("Potato", 1500, "kg", 45, "Okara"),
+            ("Onion", 900, "kg", 60, "Karachi"),
+            ("Tomato", 300, "kg", 90, "Peshawar"),
+            ("Mango (Sindhri)", 400, "kg", 320, "Multan"),
+            ("Chili (Red)", 150, "kg", 280, "Hyderabad"),
         ]
 
         created_count = 0
@@ -45,6 +45,4 @@ class Command(BaseCommand):
             )
             created_count += 1
 
-        self.stdout.write(self.style.SUCCESS(
-            f"Seeded {created_count} crops."
-        ))
+        self.stdout.write(self.style.SUCCESS(f"Seeded {created_count} crops."))

@@ -70,7 +70,7 @@
                     <i class="bi bi-x-circle"></i>
                     This order was cancelled. The quantity has been restored to the farmer's inventory.
                 </div>
-            {% elif order.status == 'completed' %}
+            {% elif order.status == 'completed' and user.profile.role == 'retailer' %}
                 <div class="alert alert-success mt-3 small">
                     <i class="bi bi-check-circle"></i>
                     This order is complete. Contact the farmer directly to arrange delivery.

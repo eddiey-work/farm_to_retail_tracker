@@ -6,8 +6,8 @@ from .models import UserProfile
 
 class RegistrationForm(UserCreationForm):
     ROLE_CHOICES = (
-        ('farmer', 'Farmer'),
-        ('retailer', 'Retailer'),
+        ("farmer", "Farmer"),
+        ("retailer", "Retailer"),
     )
 
     email = forms.EmailField(required=True)
@@ -17,19 +17,19 @@ class RegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ("username", "email", "password1", "password2")
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.email = self.cleaned_data['email']
+        user.email = self.cleaned_data["email"]
         if commit:
             user.save()
             # The signal already created a profile.
             # Now update it with the extra fields.
             profile = user.profile
-            profile.role = self.cleaned_data['role']
-            profile.phone = self.cleaned_data['phone']
-            profile.location = self.cleaned_data['location']
+            profile.role = self.cleaned_data["role"]
+            profile.phone = self.cleaned_data["phone"]
+            profile.location = self.cleaned_data["location"]
             profile.save()
         return user
 
@@ -41,5 +41,9 @@ class LoginForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            css = 'form-select' if field.widget.__class__.__name__ == 'Select' else 'form-control'
-            field.widget.attrs.update({'class': css})
+            css = (
+                "form-select"
+                if field.widget.__class__.__name__ == "Select"
+                else "form-control"
+            )
+            field.widget.attrs.update({"class": css})

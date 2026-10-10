@@ -15,26 +15,62 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='CropProduce',
+            name="CropProduce",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('crop_name', models.CharField(max_length=100)),
-                ('quantity', models.DecimalField(decimal_places=2, help_text='Available quantity in the selected unit.', max_digits=10)),
-                ('unit', models.CharField(choices=[('kg', 'Kilogram (Kg)'), ('maund', 'Maund (40 Kg)')], default='kg', max_length=10)),
-                ('price', models.DecimalField(decimal_places=2, help_text='Price per unit in PKR.', max_digits=10)),
-                ('harvest_date', models.DateField()),
-                ('location', models.CharField(max_length=100)),
-                ('description', models.TextField(blank=True)),
-                ('image', models.ImageField(blank=True, null=True, upload_to='crops/')),
-                ('is_available', models.BooleanField(default=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('farmer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='crops', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("crop_name", models.CharField(max_length=100)),
+                (
+                    "quantity",
+                    models.DecimalField(
+                        decimal_places=2,
+                        help_text="Available quantity in the selected unit.",
+                        max_digits=10,
+                    ),
+                ),
+                (
+                    "unit",
+                    models.CharField(
+                        choices=[("kg", "Kilogram (Kg)"), ("maund", "Maund (40 Kg)")],
+                        default="kg",
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "price",
+                    models.DecimalField(
+                        decimal_places=2,
+                        help_text="Price per unit in PKR.",
+                        max_digits=10,
+                    ),
+                ),
+                ("harvest_date", models.DateField()),
+                ("location", models.CharField(max_length=100)),
+                ("description", models.TextField(blank=True)),
+                ("image", models.ImageField(blank=True, null=True, upload_to="crops/")),
+                ("is_available", models.BooleanField(default=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "farmer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="crops",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Crop Produce',
-                'verbose_name_plural': 'Crop Produce',
-                'ordering': ['-created_at'],
+                "verbose_name": "Crop Produce",
+                "verbose_name_plural": "Crop Produce",
+                "ordering": ["-created_at"],
             },
         ),
     ]

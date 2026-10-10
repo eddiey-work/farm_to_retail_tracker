@@ -10,29 +10,70 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('marketplace', '0001_initial'),
+        ("marketplace", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('ordered_qty', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('total_price', models.DecimalField(decimal_places=2, max_digits=12)),
-                ('status', models.CharField(choices=[('pending', 'Pending'), ('confirmed', 'Confirmed'), ('completed', 'Completed'), ('cancelled', 'Cancelled')], default='pending', max_length=10)),
-                ('notes', models.TextField(blank=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('crop', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='orders', to='marketplace.cropproduce')),
-                ('farmer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='orders_received', to=settings.AUTH_USER_MODEL)),
-                ('retailer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='orders_placed', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("ordered_qty", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("total_price", models.DecimalField(decimal_places=2, max_digits=12)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("pending", "Pending"),
+                            ("confirmed", "Confirmed"),
+                            ("completed", "Completed"),
+                            ("cancelled", "Cancelled"),
+                        ],
+                        default="pending",
+                        max_length=10,
+                    ),
+                ),
+                ("notes", models.TextField(blank=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "crop",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="orders",
+                        to="marketplace.cropproduce",
+                    ),
+                ),
+                (
+                    "farmer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="orders_received",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "retailer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="orders_placed",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Order',
-                'verbose_name_plural': 'Orders',
-                'ordering': ['-created_at'],
+                "verbose_name": "Order",
+                "verbose_name_plural": "Orders",
+                "ordering": ["-created_at"],
             },
         ),
     ]
