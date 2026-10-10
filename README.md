@@ -37,3 +37,4 @@ Day 9: Farmer my_crops view (read-only) with stats, dashboard stats wired, farme
 Day 10: CropForm (ModelForm), crop_create view, image upload working, Add Crop button enabled.
 Day 11: crop_update and crop_delete views with ownership checks; CRUD cycle complete for farmers.
 Day 12: place_order view with transaction.atomic and select_for_update; stock deduction; order confirmation page; Order now button live.
+Day 13: Order management complete. Retailer sees placed orders; farmer sees incoming orders; status transitions (confirm/complete/cancel) with atomic stock restoration on cancel.
