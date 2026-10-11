@@ -21,3 +21,5 @@
 - Automated tests
 - Deployment to PythonAnywhere
 - Final report and slides
+## Week 3 (Days 15–21)
+- Day 15: Automated test suite (60+ tests) covering models, forms, views, permissions, and stock management
