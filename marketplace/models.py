@@ -3,6 +3,8 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
+from decimal import Decimal
+from django.core.validators import MinValueValidator  # <--- Import validator
 from django.urls import reverse
 
 
@@ -17,6 +19,11 @@ class CropProduce(models.Model):
     quantity = models.DecimalField(
         max_digits=10,
         decimal_places=2,
+        validators=[
+            MinValueValidator(
+                Decimal("0.01"), message="Quantity must be greater than zero."
+            )
+        ],
         help_text="Available quantity in the selected unit.",
     )
     unit = models.CharField(max_length=10, choices=UNIT_CHOICES, default="kg")
