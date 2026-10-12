@@ -290,3 +290,29 @@ class OrderFormTests(TestCase):
         self.crop.save()
         form = OrderForm(data={'ordered_qty': '10', 'notes': ''}, crop=self.crop)
         self.assertFalse(form.is_valid())
+
+
+# marketplace/tests.py
+
+class PublicStatsTests(TestCase):
+
+    def test_stats_page_public(self):
+        response = self.client.get(reverse('public_stats'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'marketplace/stats.html')
+
+    def test_stats_counts_correct(self):
+        farmer = User.objects.create_user(username='f', password='pass12345')
+        farmer.profile.role = 'farmer'
+        farmer.profile.save()
+
+        CropProduce.objects.create(
+            farmer=farmer, crop_name='W', quantity=Decimal('10'),
+            unit='kg', price=Decimal('10'), harvest_date=date.today(),
+            location='X', is_available=True,
+        )
+
+        response = self.client.get(reverse('public_stats'))
+        self.assertEqual(response.context['stats']['farmers'], 1)
+        self.assertEqual(response.context['stats']['crops_listed'], 1)
+        self.assertEqual(response.context['stats']['crops_available'], 1)

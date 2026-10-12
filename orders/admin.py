@@ -8,25 +8,22 @@ from .models import Order
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
-        "crop",
-        "retailer",
-        "farmer",
-        "ordered_qty",
-        "total_price",
-        "status",
-        "created_at",
+        'id',
+        'crop',
+        'retailer',
+        'farmer',
+        'ordered_qty',
+        'total_price',
+        'status',
+        'created_at',
     )
-    list_filter = ("status", "created_at", "crop__unit")
-    search_fields = (
-        "retailer__username",
-        "farmer__username",
-        "crop__crop_name",
-    )
-    date_hierarchy = "created_at"
-    readonly_fields = ("created_at", "updated_at")
-    ordering = ("-created_at",)
+    list_filter = ('status', 'created_at', 'crop__unit')
+    search_fields = ('retailer__username', 'farmer__username', 'crop__crop_name')
+    date_hierarchy = 'created_at'
+    readonly_fields = ('created_at', 'updated_at')
+    ordering = ('-created_at',)
     list_per_page = 25
+    list_select_related = ('crop', 'retailer', 'farmer')  # NEW
 
     fieldsets = (
         ("Parties", {"fields": ("retailer", "farmer")}),

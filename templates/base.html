@@ -115,7 +115,13 @@
     <!-- Footer -->
     <footer class="bg-dark text-light py-3 mt-5">
         <div class="container text-center">
-            <small>&copy; {% now "Y" %} Farm to Retail Tracker — FYP Project</small>
+            <small>
+                &copy; {% now "Y" %} Farm to Retail Tracker — FYP Project
+                &nbsp;·&nbsp;
+                <a href="{% url 'public_stats' %}" class="text-light text-decoration-none">
+                    Stats
+                </a>
+            </small>
         </div>
     </footer>
 

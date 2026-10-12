@@ -24,6 +24,7 @@ class CropProduceAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     readonly_fields = ("created_at", "updated_at")
     ordering = ("-created_at",)
+    list_select_related = ('farmer',)
 
     fieldsets = (
         ("Farmer", {"fields": ("farmer",)}),

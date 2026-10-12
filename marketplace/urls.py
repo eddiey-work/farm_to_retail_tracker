@@ -10,4 +10,5 @@ urlpatterns = [
         views.order_confirmation,
         name="order_confirmation",
     ),
+    path('stats/', views.public_stats, name='public_stats'),
 ]

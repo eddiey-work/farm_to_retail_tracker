@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
-
+from django.db.models import Sum
 from .models import CropProduce
 
 from accounts.decorators import role_required
@@ -355,3 +355,35 @@ def crop_detail(request, pk):
         CropProduce.objects.select_related("farmer", "farmer__profile"), pk=pk
     )
     return render(request, "marketplace/crop_detail.html", {"crop": crop})
+
+
+from django.contrib.auth.models import User
+from orders.models import Order
+
+
+def public_stats(request):
+    """A public page showing platform-wide numbers."""
+    from django.db.models import Count, Q
+
+    stats = {
+        'farmers': User.objects.filter(profile__role='farmer').count(),
+        'retailers': User.objects.filter(profile__role='retailer').count(),
+        'crops_listed': CropProduce.objects.count(),
+        'crops_available': CropProduce.objects.filter(is_available=True).count(),
+        'orders_placed': Order.objects.count(),
+        'orders_completed': Order.objects.filter(status='completed').count(),
+        'crops_sold_value': (
+            Order.objects
+            .filter(status='completed')
+            .aggregate(total=Sum('total_price'))
+            .get('total') or 0
+        ),
+        'locations': (
+            CropProduce.objects
+            .values_list('location', flat=True)
+            .distinct()
+            .count()
+        ),
+    }
+
+    return render(request, 'marketplace/stats.html', {'stats': stats})

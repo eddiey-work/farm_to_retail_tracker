@@ -12,19 +12,19 @@
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card p-3">
                 <div class="text-muted small">My Orders</div>
                 <div class="fs-3 fw-bold text-success">{{ order_count }}</div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card p-3">
                 <div class="text-muted small">Pending</div>
                 <div class="fs-3 fw-bold text-warning">{{ pending_count }}</div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card p-3">
                 <div class="text-muted small">Confirmed</div>
                 <div class="fs-3 fw-bold text-info">{{ confirmed_count }}</div>
@@ -46,5 +46,60 @@
             </a>
         </div>
     </div>
+    {% if recent_orders %}
+    <div class="card mt-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 text-success">
+                <i class="bi bi-clock-history"></i> Recent orders
+            </h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Crop</th>
+                        <th>Farmer</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                        <tr>
+                            <td><strong>#{{ order.pk }}</strong></td>
+                            <td>{{ order.crop.crop_name }}</td>
+                            <td class="small">{{ order.farmer.username }}</td>
+                            <td class="small">
+                                {{ order.ordered_qty }} {{ order.crop.get_unit_display }}
+                            </td>
+                            <td class="small">Rs. {{ order.total_price }}</td>
+                            <td>
+                                <span class="badge
+                                    {% if order.status == 'pending' %}bg-warning text-dark
+                                    {% elif order.status == 'confirmed' %}bg-info text-dark
+                                    {% elif order.status == 'completed' %}bg-success
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'order_detail' order.pk %}"
+                                   class="btn btn-sm btn-outline-success">View</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-white text-end">
+            <a href="{% url 'my_orders' %}" class="text-success small">
+                See all orders →
+            </a>
+        </div>
+    </div>
+{% endif %}
 </div>
 {% endblock %}
