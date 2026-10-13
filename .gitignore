@@ -35,3 +35,6 @@ media/
 
 # Collected static
 staticfiles/
+
+.coverage
+htmlcov/
